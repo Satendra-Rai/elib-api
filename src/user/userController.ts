@@ -4,6 +4,7 @@ import userModel from "./userModel";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { config } from "../config/config";
+import { User } from "./userTypes";
 
 const createUser = async(
     req: Request,
@@ -21,27 +22,69 @@ const createUser = async(
     }
 
     //Database call
+    
+    try {
 
-    const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ email });
 
-    if(user) {
-        const error = createHttpError(400, "User already exists with this email");
-        return next(error);
+        if(user) {
+            const error = createHttpError(400, "User already exists with this email");
+            return next(error);
+        }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+
+        return next(createHttpError(500, "Error while getting user"));
+
     }
+    
 
     //Password hash
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let newUser: User;
+    
+    try {
 
-    const newUser = await userModel.create({
-        name,
-        email,
-        password: hashedPassword,
-    });
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        newUser = await userModel.create({
+            name,
+            email,
+            password: hashedPassword,
+        });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+
+        return next(createHttpError(500, "Error while creating user"));
+
+    }
 
     // Token generation 
 
-    const token = sign({sub: newUser._id}, config.jwtSecret as string, {expiresIn: '7d',});
+    try {
+
+        const token = sign({sub: newUser._id}, config.jwtSecret as string, {
+            expiresIn: '7d',
+            algorithm: "HS256",
+        });
+    
+        // Response
+    
+        res.json({ accessToken: token });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+
+        return next(createHttpError(500, "Error while signing the jwt token"));
+        
+    }
+
+    const token = sign({sub: newUser._id}, config.jwtSecret as string, {
+        expiresIn: '7d',
+        algorithm: "HS256",
+    });
 
     // Response
 
