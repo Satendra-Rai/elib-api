@@ -72,7 +72,7 @@ const createUser = async(
     
         // Response
     
-        res.json({ accessToken: token });
+        res.status(201).json({ accessToken: token });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
@@ -91,5 +91,3 @@ const createUser = async(
     res.json({ accessToken: token });
 };
 
-
-export {createUser};

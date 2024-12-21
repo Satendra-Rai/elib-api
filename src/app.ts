@@ -15,7 +15,7 @@ app.get('/', (req, res, next) => {
     res.json({message: "Welcome yo elib apis"});
 });
 
-app.use('/api/users',userRouter);
+app.use('/api/users', userRouter);
 
 // Global error handler
 app.use(globalErrorHandler);

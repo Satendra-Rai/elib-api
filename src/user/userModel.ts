@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { User } from "./userTypes";
 
 
-
 const userSchema = new mongoose.Schema<User>({
 
     name: {
@@ -13,7 +12,7 @@ const userSchema = new mongoose.Schema<User>({
     email: {
         type: String,
         unique: true,
-        required: true,
+        required: true
     },
 
     password: {
