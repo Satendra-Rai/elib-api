@@ -7,6 +7,7 @@ const app = express();
 
 app.use(express.json());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.get('/', (req, res, next) => {
 
     const error = createHttpError(400, "Something went wrong");
