@@ -7,6 +7,8 @@ const createBook = async(
     next: NextFunction
 ) => {
 
+    const {} = req.body;
+
     res.json({});
 
 }
