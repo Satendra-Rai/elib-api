@@ -24,28 +24,21 @@ const createUser = async(
     //Database call
     
     try {
-
         const user = await userModel.findOne({ email });
-
         if(user) {
             const error = createHttpError(400, "User already exists with this email");
             return next(error);
         }
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-
         return next(createHttpError(500, "Error while getting user"));
-
-    }
-    
+    }    
 
     //Password hash
 
     let newUser: User;
     
     try {
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
         newUser = await userModel.create({
@@ -53,42 +46,24 @@ const createUser = async(
             email,
             password: hashedPassword,
         });
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-
         return next(createHttpError(500, "Error while creating user"));
-
     }
 
     // Token generation 
 
     try {
-
         const token = sign({sub: newUser._id}, config.jwtSecret as string, {
             expiresIn: '7d',
             algorithm: "HS256",
-        });
-    
-        // Response
-    
+        });    
+        // Response    
         res.status(201).json({ accessToken: token });
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-
-        return next(createHttpError(500, "Error while signing the jwt token"));
-        
+        return next(createHttpError(500, "Error while signing the jwt token"));       
     }
-
-    const token = sign({sub: newUser._id}, config.jwtSecret as string, {
-        expiresIn: '7d',
-        algorithm: "HS256",
-    });
-
-    // Response
-
-    res.json({ accessToken: token });
 
 };
 
@@ -99,22 +74,17 @@ const loginUser = async(req: Request, res: Response, next: NextFunction) => {
     if(!email || !password) {
         return next(createHttpError(400, "All fields are required"));
     }
-
     let user;
     
     try {
-
         user = await userModel.findOne({ email });
 
         if(!user) {
             return next(createHttpError(404, "User not found"));
-        }
-        
+        }       
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-
-        return next(createHttpError(400, "Error while getting user"));
-        
+        return next(createHttpError(400, "Error while getting user"));        
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

@@ -5,12 +5,12 @@ import path from 'node:path';
 
 const bookRouter = express.Router();
 
-// file store local -> upload database
+// file store local -> upload cloudinary
 
 const upLoad = multer({
     dest: path.resolve(__dirname, '../../public/data/uploads'),
     limits: {fileSize: 3e7} //30mb
-})
+});
 
 // routes
 
