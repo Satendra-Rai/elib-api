@@ -49,7 +49,23 @@ const createBook = async(
                 format: "pdf",
             }
         );
+        const _req = req as AuthRequest;
 
+        const newBook = await bookModel.create({
+            title,
+            description,
+            genre,
+            author: _req.userId,
+            coverImage: uploadResult.secure_url,
+            file: bookFileUploadResult.secure_url,
+        });
+
+        // Delete temp.files
+        // todo: wrap in try catch...
+        await fs.promises.unlink(filePath);
+        await fs.promises.unlink(bookFilePath);
+
+        res.status(201).json({ id: newBook._id });
     } catch (err) {
         console.log(err);
         return next(createHttpError(500, "Error while uploading the files."));
