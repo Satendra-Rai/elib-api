@@ -9,7 +9,6 @@ import { AuthRequest } from "../middlewares/authenticate";
 const createBook = async(
     req: Request,
     res: Response, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: NextFunction
 ) => {
 
