@@ -13,7 +13,6 @@ const createBook = async(
 ) => {
 
     const { title, genre, description} = req.body;
-    console.log("files", req.files);
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     // 'application/pdf'
